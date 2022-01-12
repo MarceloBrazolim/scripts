@@ -22,20 +22,20 @@ W='2'
 
 ##### Functions #####
 
-#warn() {
-#rows="%-20s %s\n"
-#blank="\n"
-#
-#printf "$blank"
-#printf "Warning:\n"
-#printf "  No specialized test session was performed reffering the"
-#printf "$blank"
-#printf "  safety towards the network hosting device by using this tool."
-#printf "$blank"
-#printf "  IT MAY HARM YOUR MODEN"
-#printf "$blank"
-#printf "$blank"
-#}
+warn() {
+rows="%-20s %s\n"
+blank="\n"
+
+printf "$blank"
+printf "Warning:\n"
+printf "  No specialized test session was performed reffering the"
+printf "$blank"
+printf "  safety towards the network hosting device by using this tool."
+printf "$blank"
+printf "  IT MAY HARM YOUR MODEN"
+printf "$blank"
+printf "$blank"
+}
 
 ipaddr() {
 blank="\n"
@@ -154,7 +154,7 @@ touch $LOCK_FILE
 
 ##### Body #####
 
-#warn
+warn
 
 ipaddr
 
