@@ -104,6 +104,9 @@ if [ $1 ]; then
         echo "results will be saved in ${oN} file"
         shift
       ;;
+      '-s'|'--self')
+        s=true
+      ;;
       *)
         echo "$1: switch unknown"
         echo "To see the help menu, type $me --help."
