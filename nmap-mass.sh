@@ -155,7 +155,9 @@ fi
 
 
 if [ $oN ]; then
-  [ ! -d "logs" ] && (mkdir 'logs')
+  if [ ! -d "logs" ]; then
+    (mkdir 'logs')
+  fi
   (date >> "$oN" && echo "" >> "$oN")
 fi
 
