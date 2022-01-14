@@ -137,6 +137,20 @@ ipaddr
 
 (cat logs/* | grep -e "bytes from" | cut -d 'm' -f 2 | cut -d ':' -f 1 > $LOCK_FILE) # | cut -d '.' -f 1,2,3,4)
 (sort -u -n -t. -k1,1 -k2,2 -k3,3 -k4,4 -s --output=$LOCK_FILE $LOCK_FILE)
+
+if [ $s ]; then
+  ip_self=$(cat $LOCK_FILE)
+  echo "  Select which IP to attack:"
+  IFS=$'\n' read -r -d '' -a array_self <<< "$ip_self"
+  for (( j = 0; j < ${#array_self[@]}; j++ )); do
+    echo "    $j: ${array_self[$j]}"
+  done
+  printf "> _ "
+  read -n $(printf "${#array_self[@]}" | wc -m) -s -e self_reply
+  target=($(echo "${array_self[$self_reply]}." | tr ";" "\n"))
+  printf "\n\n"
+fi
+
 for (( i=0; i <= ${#LOCK_FILE[@]}; i++ )); do
   (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} >> $LOCK_FILE) 2>&-;
 done
