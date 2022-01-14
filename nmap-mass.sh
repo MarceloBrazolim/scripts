@@ -55,7 +55,6 @@ printf "$blank"
 printf "Options:\n"
 printf "$rows" "  -h" "shows this menu"
 printf "$rows" "  -v" "shows the program version"
-# printf "$rows" "  -a" "searches for every IP parting from class B"
 printf "$blank"
 exit
 }
@@ -85,10 +84,6 @@ if [ $1 ]; then
         ipaddr
         exit 0
       ;;
-#      '-a'|'--all')
-#        echo "Option --all selected, this operation will take longer"
-#        a=true
-#      ;;
       '-Pn')
         Pn=" -Pn"
       ;;
@@ -111,7 +106,8 @@ if [ $1 ]; then
         v=" -vvv"
       ;;
       '-oN')
-        oN="logs/map-${2}"
+        oNComm=" -oN"
+        oN="/tmp/logs/map-${2}"
         echo "results will be saved in ${oN} file"
         shift
       ;;
@@ -153,6 +149,12 @@ fi
 (cat logs/* | grep -e "bytes from" | cut -d 'm' -f 2 | cut -d ':' -f 1 > $LOCK_FILE) # | cut -d '.' -f 1,2,3,4)
 (sort -u -n -t. -k1,1 -k2,2 -k3,3 -k4,4 -s --output=$LOCK_FILE $LOCK_FILE)
 
+
+if [ $oN ]; then
+  [ ! -d "/tmp/logs" ] && (mkdir '/tmp/logs')
+  (date >> "$oN" && echo "" >> "$oN")
+fi
+
 if [ $s ]; then
   ip_self=$(cat $LOCK_FILE)
   echo "  Select which IP to attack:"
@@ -164,17 +166,9 @@ if [ $s ]; then
   read -n $(printf "${#array_self[@]}" | wc -m) -s -e self_reply
   target=($(echo "${array_self[$self_reply]}." | tr ";" "\n"))
   printf "\n\n"
-  echo ""
-  (nmap $sV $sC $sU $Pn $v ${target} >> $LOCK_FILE) 2>&-;
+  (nmap $sV $sC $sU $Pn $v ${target} $oNComm $oN) 2>&-;
 else
   for (( i=0; i <= ${#LOCK_FILE[@]}; i++ )); do
-    (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} >> $LOCK_FILE) 2>&-;
+    (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} $oNComm $oN) 2>&-;
   done
-fi
-
-if [ $oN ]; then
-  [ ! -d "logs" ] && (mkdir 'logs')
-  (date >> "$oN" && cat "$LOCK_FILE" >> "$oN" && cat "$LOCK_FILE" && echo "" >> "$oN")
-else
-  (cat $LOCK_FILE)
 fi
