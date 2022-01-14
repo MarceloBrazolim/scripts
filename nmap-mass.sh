@@ -107,7 +107,7 @@ if [ $1 ]; then
       ;;
       '-oN')
         oNComm=" -oN"
-        oN="/tmp/logs/map-${2}"
+        oN="/logs/map-${2}"
         echo "results will be saved in ${oN} file"
         shift
       ;;
@@ -155,7 +155,7 @@ fi
 
 
 if [ $oN ]; then
-  [ ! -d "/tmp/logs" ] && (mkdir '/tmp/logs')
+  [ ! -d "logs" ] && (mkdir 'logs')
   (date >> "$oN" && echo "" >> "$oN")
 fi
 
