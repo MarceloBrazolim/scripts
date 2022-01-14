@@ -168,11 +168,11 @@ if [ $s ]; then
   done
   printf "> _ "
   read -n $(printf "${#array_self[@]}" | wc -m) -s -e self_reply
-  target=($(echo "${array_self[$self_reply]}." | tr ";" "\n"))
+  target=($(echo "${array_self[$self_reply]}" | tr ";" "\n"))
   printf "\n\n"
-  (nmap $sV $sC $sU $Pn $v ${target} $oNComm $oN) 2>&-;
+  (nmap $sV $sC $sU $Pn $v $oNComm $oN ${target}) 2>&-;
 else
   for (( i=0; i <= ${#LOCK_FILE[@]}; i++ )); do
-    (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} $oNComm $oN) 2>&-;
+    (nmap $sV $sC $sU $Pn $v $oNComm $oN ${LOCK_FILE[i]}) 2>&-;
   done
 fi
