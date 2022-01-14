@@ -74,6 +74,17 @@ if [ $1 ]; then
         echo $VERSION
         exit 0
       ;;
+      '-nW'|'--no-wall')
+        nW=true
+      ;;
+      '-wr'|'--warn')
+        warn
+        exit 0
+      ;;
+      '-ip'|'--ipaddr')
+        ipaddr
+        exit 0
+      ;;
 #      '-a'|'--all')
 #        echo "Option --all selected, this operation will take longer"
 #        a=true
@@ -134,9 +145,10 @@ touch $LOCK_FILE
 
 ##### Body #####
 
-warn
-
-ipaddr
+if [ ! $nW ]; then
+  warn
+  ipaddr
+fi
 
 (cat logs/* | grep -e "bytes from" | cut -d 'm' -f 2 | cut -d ':' -f 1 > $LOCK_FILE) # | cut -d '.' -f 1,2,3,4)
 (sort -u -n -t. -k1,1 -k2,2 -k3,3 -k4,4 -s --output=$LOCK_FILE $LOCK_FILE)
@@ -152,11 +164,13 @@ if [ $s ]; then
   read -n $(printf "${#array_self[@]}" | wc -m) -s -e self_reply
   target=($(echo "${array_self[$self_reply]}." | tr ";" "\n"))
   printf "\n\n"
+  echo ""
+  (nmap $sV $sC $sU $Pn $v ${target} >> $LOCK_FILE) 2>&-;
+else
+  for (( i=0; i <= ${#LOCK_FILE[@]}; i++ )); do
+    (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} >> $LOCK_FILE) 2>&-;
+  done
 fi
-
-for (( i=0; i <= ${#LOCK_FILE[@]}; i++ )); do
-  (nmap $sV $sC $sU $Pn $v ${LOCK_FILE[i]} >> $LOCK_FILE) 2>&-;
-done
 
 if [ $oN ]; then
   [ ! -d "logs" ] && (mkdir 'logs')

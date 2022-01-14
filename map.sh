@@ -86,6 +86,17 @@ if [ $1 ]; then
         echo $VERSION
         exit 0
       ;;
+      '-nW'|'--no-wall')
+        nW=true
+      ;;
+      '-wr'|'--warn')
+        warn
+        exit 0
+      ;;
+      '-ip'|'--ipaddr')
+        ipaddr
+        exit 0
+      ;;
       '-l'|'--localhost')
         target='localhost'
         l=true
@@ -154,9 +165,10 @@ touch $LOCK_FILE
 
 ##### Body #####
 
-warn
-
-ipaddr
+if [ ! $nW ]; then
+  warn
+  ipaddr
+fi
 
 if [ $s ]; then
   ip_self=$(ip address | grep -e "inet " | cut -d '/' -f 1 | cut -d "t" -f 2 | cut -d '.' -f 1,2,3)
