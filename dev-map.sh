@@ -181,7 +181,9 @@ if [ $s ]; then
 
   if [ $hd ]; then
     [ $v ] && echo "  Discovering hosts..."
-    whytho=("${target[@]:1}")                                              var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")                     [ $v ] && echo "Targeting: (${var[@]}.0-${range1}.0-${range})"
+    whytho=("${target[@]:1}")
+    var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")
+    [ $v ] && echo "Targeting: (${var[@]}.0-${range1}.0-${range})"
     for (( i= 0; i <= $range1; i++ )); do
       (ping -W $W -c $c $var${i} | grep "bytes from" >> $LOCK_FILE &) 2>&-;
     done
