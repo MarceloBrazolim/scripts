@@ -116,7 +116,7 @@ if [ $1 ]; then
         shift
       ;;
       '-a'|'--all')
-        [ $v ] && echo "Option --all selected, this operation will take longer"
+        [ $v ] && (echo "Option --all selected, this operation will take longer")
         a=true
       ;;
       '-r'|'--range')
@@ -132,7 +132,7 @@ if [ $1 ]; then
       ;;
       '-oN')
         oN="logs/map-${2}"
-        [ $v ] && echo "results will be saved in ${oN} file"
+        [ $v ] && (echo "results will be saved in ${oN} file")
         shift
       ;;
       '-s'|'--self')
@@ -141,7 +141,7 @@ if [ $1 ]; then
       '-vv')
         v=true
       ;;
-      '-hd' | '--host-discovery')
+      '-hd'|'--host-discovery')
         hd=true
       ;;
       *)
@@ -180,10 +180,10 @@ if [ $s ]; then
   ip_self=$(ip address | grep -e "inet " | cut -d '/' -f 1 | cut -d "t" -f 2 | cut -d '.' -f 1,2,3)
 
   if [ $hd ]; then
-    [ $v ] && echo "  Discovering hosts..."
+    [ $v ] && (echo "  Discovering hosts..")
     whytho=("${target[@]:1}")
     var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")
-    [ $v ] && echo "Targeting: (${var[@]}.0-${range1}.0-${range})"
+    [ $v ] && (echo "Targeting: (${var[@]}.0-${range1}.0-${range})")
     for (( i= 0; i <= $range1; i++ )); do
       (ping -W $W -c $c $var${i} | grep "bytes from" >> $LOCK_FILE &) 2>&-;
     done
@@ -201,13 +201,13 @@ if [ $s ]; then
 fi
 
 if [ $l ] || [ $k ]; then
-  [ $v ] &&  echo "Targeting: ($target)"
+  [ $v ] &&  (echo "Targeting: ($target)")
   (ping -W $W -c $c $target | grep "bytes from" >> $LOCK_FILE &) 2>&-;
 else
   if [ $a ]; then
     whytho=("${target[@]:1}")
     var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")
-    [ $v ] && echo "Targeting: (${var[@]}.0-${range1}.0-${range})"
+    [ $v ] && (echo "Targeting: (${var[@]}.0-${range1}.0-${range})")
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= $range; y++ )); do
         (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" >> $LOCK_FILE &) 2>&-;
@@ -216,7 +216,7 @@ else
   else
     whytho=("${target[@]:1}")
     var=$(printf %s "${target[0]}" "${whytho[@]/#/.}")
-    [ $v ] && echo "Targeting: (${var[@]}0-${range})"
+    [ $v ] && (echo "Targeting: (${var[@]}0-${range})")
     for (( i = 0; i <= $range; i++ )); do
       (ping -W $W -c $c $var${i} | grep "bytes from" >> $LOCK_FILE &) 2>&-;
     done
