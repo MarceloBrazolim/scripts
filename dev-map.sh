@@ -183,6 +183,7 @@ if [ $s ]; then
 
   echo "Select which connection to map:"
   printf "\n"
+  ip_self+=("$hosts")
   printf "hosts:\n$hosts\n"
   printf "1ip_self:\n$ip_self\n"
   IFS=$'\n' read -r -d '' -a array_self <<< "$ip_self"
