@@ -138,7 +138,7 @@ if [ $1 ]; then
       '-s'|'--self')
         s=true
       ;;
-      '-v')
+      '-vv')
         v=true
       ;;
       '-hd' | '--host-discovery')
