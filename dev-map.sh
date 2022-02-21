@@ -186,10 +186,12 @@ if [ $s ]; then
     [ $v ] && (echo "Targeting: (${var[@]}.0-${range1}.0-${range})")
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
-        (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" >> $LOCK_FILE &) 2>&-;
+        hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" &) 2>&-;
       done
     done
-    [ $ v ] && (echo "")
+    sleep $W
+    echo $hosts
+    [ $v ] && (echo "")
   fi
 
   echo "  Select which connection to map:"
