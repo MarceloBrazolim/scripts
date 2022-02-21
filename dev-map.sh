@@ -186,11 +186,12 @@ if [ $s ]; then
     [ $v ] && (echo "Targeting: (${var[@]}.0-${range1}.0-${range})")
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
-        hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" &) 2>&-;
+        hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) 2>&-;
       done
     done
-    sleep $W
     echo $hosts
+    echo ""
+    (cat hosts_test)
     [ $v ] && (echo "")
   fi
 
