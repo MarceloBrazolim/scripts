@@ -176,14 +176,14 @@ if [ $s ]; then
       done
     done
     echo "Discovered Hosts:"
-    (cat hosts_test.lock | grep "bytes from" | cut -d ':' -f 1 | cut -d 'm' -f 2 | cut -d '.' -f 1,2,3,4)
+    hosts=$(cat hosts_test.lock | grep "bytes from" | cut -d ':' -f 1 | cut -d 'm' -f 2 | cut -d '.' -f 1,2,3)
     (rm hosts_test.lock)
     echo ""
   fi
 
   echo "ip_self: $ip_self"
   echo "Select which connection to map:"
-  IFS=$'\n' read -r -d '' -a array_self <<< "$ip_self"
+  IFS=$'\n' read -r -d '' -a array_self <<< "$ip_self" <<< "$hosts"
   echo "IFS: $IFS"
   for (( j = 0; j < ${#array_self[@]}; j++ )); do
     echo "  $j: ${array_self[$j]}"
