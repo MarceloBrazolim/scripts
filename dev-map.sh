@@ -183,6 +183,7 @@ if [ $s ]; then
     whytho=("${target[@]:1}")
     var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")
     [ $v ] && (echo "Discovering hosts.: (${var[@]}.0-${range1}.0-1)")
+    echo "$var.0-255.0-1"
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
         (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) #2>&-;
