@@ -186,11 +186,11 @@ if [ $s ]; then
     echo "$var.0-255.0-1"
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
-        (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test.lock &) 2>&-;
+        (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" >> hosts_test.lock &) 2>&-;
       done
     done
     printf "\n-++ "
-    (cat hosts_test)
+    (cat hosts_test.lock)
     [ $v ] && (echo ".")
   fi
 
