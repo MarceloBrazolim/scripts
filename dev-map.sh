@@ -190,7 +190,7 @@ if [ $s ]; then
       done
     done
     printf "Discovered Hosts:"
-    (cat hosts_test.lock | grep "bytes from" | cut -d ':' -f 1 | cut -d 'from ' -f 2 | cut -d '.' -f 1,2,3,4)
+    (cat hosts_test.lock | grep "bytes from" | cut -d ':' -f 1 | cut -d 'm' -f 2 | cut -d '.' -f 1,2,3,4)
     [ $v ] && (echo ".")
   fi
 
