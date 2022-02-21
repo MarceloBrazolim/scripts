@@ -189,10 +189,10 @@ if [ $s ]; then
         hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) 2>&-;
       done
     done
-    echo $hosts
-    echo ""
+    echo "$hosts ++-"
+    printf "\n-++ "
     (cat hosts_test)
-    [ $v ] && (echo "")
+    [ $v ] && (echo ".")
   fi
 
   echo "  Select which connection to map:"
