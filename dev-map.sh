@@ -180,10 +180,9 @@ if [ $s ]; then
   ip_self=$(ip address | grep -e "inet " | cut -d '/' -f 1 | cut -d "t" -f 2 | cut -d '.' -f 1,2,3)
 
   if [ $hd ]; then
-    [ $v ] && (echo "Discovering hosts..")
     whytho=("${target[@]:1}")
     var=$(printf %s "${target[0]}" "${whytho[0]/#/.}")
-    [ $v ] && (echo "Targeting: (${var[@]}.0-${range1}.0-${range})")
+    [ $v ] && (echo "Discovering hosts.: (${var[@]}.0-${range1}.0-${range})")
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
         hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) 2>&-;
