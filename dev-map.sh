@@ -23,41 +23,28 @@ W='2'
 ##### Functions #####
 
 warn() {
-rows="%-20s %s\n"
-blank="\n"
 
-printf "$blank"
-printf "Warning:\n"
-printf "  No specialized test session was performed reffering the"
-printf "$blank"
-printf "  safety towards the network hosting device by using this tool."
-printf "$blank"
-printf "  IT MAY HARM YOUR MODEN"
-printf "$blank"
-printf "$blank"
+printf "\nWarning:\n"
+printf "  No specialized test session was performed reffering the\n\n"
+printf "  safety towards the network hosting device by using this tool.\n\n"
+printf "  IT MAY HARM YOUR MODEN\n\n"
 }
 
 ipaddr() {
-blank="\n"
-printf "$blank"
-printf "  YOUR IP ADDRESS IS:\n"
+printf "\n  YOUR IP ADDRESS IS:\n"
 (ip address | grep -e "inet ")
-printf "$blank"
+printf "\n"
 }
 
 help() {
 rows="%-20s %s\n"
-blank="\n"
 
 warn
-printf "$blank"
-printf "Details:\n"
+printf "\nDetails:\n"
 printf "$rows" "  $DETAILS"
-printf "$blank"
-printf "Usage:\n"
+printf "\nUsage:\n"
 printf "$rows" "  $USAGE"
-printf "$blank"
-printf "Options:\n"
+printf "\nOptions:\n"
 printf "$rows" "  -c <count>" "stop after <count> replies"
 printf "$rows" "  -h" "shows this menu"
 printf "$rows" "  -l" "queries for localhost"
@@ -68,7 +55,7 @@ printf "$rows" "  -a" "searches for every IP parting from class B"
 printf "$rows" "  -r <n>" "defines the range to scan the IPs on class A"
 printf "$rows" "  -r1 <n>" "defines the range to scan the IPs on class B"
 printf "$rows" "  -oN <file>" "saves the output in the specified file, instead of echoing to the terminal"
-printf "$blank"
+printf "\n"
 exit
 }
 
@@ -194,10 +181,12 @@ if [ $s ]; then
     echo ""
   fi
 
-  echo "  Select which connection to map:"
+  echo "ip_self: $ip_self"
+  echo "Select which connection to map:"
   IFS=$'\n' read -r -d '' -a array_self <<< "$ip_self"
+  echo "IFS: $IFS"
   for (( j = 0; j < ${#array_self[@]}; j++ )); do
-    echo "    $j: ${array_self[$j]}"
+    echo "  $j: ${array_self[$j]}"
   done
   printf "> _ "
   read -n $(printf "${#array_self[@]}" | wc -m) -s -e self_reply
