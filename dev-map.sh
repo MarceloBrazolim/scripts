@@ -189,9 +189,10 @@ if [ $s ]; then
         (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" >> hosts_test.lock &) 2>&-;
       done
     done
-    printf "Discovered Hosts:"
+    echo "Discovered Hosts:"
     (cat hosts_test.lock | grep "bytes from" | cut -d ':' -f 1 | cut -d 'm' -f 2 | cut -d '.' -f 1,2,3,4)
-    [ $v ] && (echo ".")
+    (rm hosts_test.lock)
+    echo ""
   fi
 
   echo "  Select which connection to map:"
