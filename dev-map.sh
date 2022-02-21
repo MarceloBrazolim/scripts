@@ -185,7 +185,7 @@ if [ $s ]; then
     [ $v ] && (echo "Discovering hosts.: (${var[@]}.0-${range1}.0-${range})")
     for (( i = 0; i <= $range1; i++ )); do
       for (( y = 0; y <= 1; y++ )); do
-        hosts=$(ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) 2>&-;
+        (ping -W $W -c $c $var.${i}.${y} | grep "bytes from" > hosts_test &) 2>&-;
       done
     done
     echo "$hosts ++-"
