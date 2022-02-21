@@ -131,7 +131,7 @@ if [ $1 ]; then
         d=true
       ;;
       '-oN')
-        oN="/tmp/logs/map-${2}"
+        oN="logs/map-${2}"
         echo "results will be saved in ${oN} file"
         shift
       ;;
@@ -210,7 +210,7 @@ sleep $W
 (sort -n -t. -k1,1 -k2,2 -k3,3 -k4,4 -s --output=$LOCK_FILE $LOCK_FILE)
 
 if [ $oN ]; then
-  [ ! -d "/tmp/logs" ] && (mkdir '/tmp/logs')
+  [ ! -d "logs" ] && (mkdir 'logs')
   (date >> "$oN" && cat "$LOCK_FILE" >> "$oN" && cat "$LOCK_FILE" && echo "" >> "$oN")
 else
   (cat $LOCK_FILE)
