@@ -118,7 +118,7 @@ if [ $1 ]; then
         d=true
       ;;
       '-oN')
-        oN="logs/map-${2}"
+        oN="${2}"
         [ $v ] && (echo "results will be saved in ${oN} file")
         shift
       ;;
