@@ -107,7 +107,7 @@ if [ $1 ]; then
       ;;
       '-oN')
         oNComm=" -oN"
-        oN="logs/map-${2}"
+        oN="${2}"
         echo "results will be saved in ${oN} file"
         shift
       ;;
