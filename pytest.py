@@ -9,6 +9,10 @@ except:
 
 parser = argparse.ArgumentParser(description='uses ICMP brute force to list connected ' +
                                                                             'devices in the local network')
+
+parser.add_argument("--ipInitial", default='127.0.0.1', dest='__ipInitial', required=False, help="defines a custom initial IP")
+parser.add_argument("--ipLimit", default='127.0.0.10', dest='__ipLimit', required=False, help="defines a custom IP limit")
+
 parser.add_argument("-W", default=1, type=int, dest='wait', metavar='SECONDS', help="Time to wait for a response, in seconds.")
 parser.add_argument("-c", default=1, type=int, dest='count', metavar='COUNT', help="Stop after sending COUNT packets.")
 parser.add_argument("-s", '--self', action='store_true', help="Enable discovery mode")
@@ -17,7 +21,7 @@ parser.add_argument('-d', '--debugg', dest='d', action='store_true', help=argpar
 
 
 ##### Global Variables
-__ipInitial = [192, 168, 43, 1]
+__ipInitial = [127, 0, 0, 1]
 __ipLimit = [__ipInitial[0], __ipInitial[1], __ipInitial[2]+0, 40]
 
 
