@@ -56,7 +56,7 @@ class IpRange:
                     for b in range(first[2], second[2]+1):
                         for a in range(first[3], second[3]+1):
                             command = ["ping", "-c", f"{self.count}", "-W", f"{self.wait}", f"{d}.{c}.{b}.{a}"]
-                            mapped += [str(check_output(command)).split('bytes from')[1].split(':')[0]]
+                            mapped += [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
             print(mapped)
             # sleep(self.wait)
 
