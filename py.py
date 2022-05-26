@@ -24,13 +24,25 @@ parser.add_argument("-s", '--self', action='store_true', help="Enable discovery 
 
 # CRUD .. yes, in python
 def crudGet(file):
-        return [x.split("\n")[0] for x in open(file, "r").readlines()]
+    return [x.split("\n")[0] for x in open(file, "r").readlines()]
 
-def crudPut(file, ip, name):
-    for each, _id in enumerate(['user']):
-        file[_id][user] = {"ip": ip, "name": name}
+def crudGetJson(file):
+    return json.load(open(file))
+
+def crudPut(file, dictio, id, ip, name):
+    for each, _id in enumerate(id):
+        dictio[_id] = {"ip": ip, "name": name}
     with open(file, "w") as jsonFile:
         json.dump(file, jsonFile)
+
+
+def checkElement(array, element):
+    # checks weather or not IP is present in logPath
+    # if exists return the element in the array equals to the parameter element
+    try:
+        return [x for x in array if x == element][0]
+    except:
+        return exit(1)
 
 
 class IpRange:
@@ -56,9 +68,14 @@ class IpRange:
                     for b in range(first[2], second[2]+1):
                         for a in range(first[3], second[3]+1):
                             command = ["ping", "-c", f"{self.count}", "-W", f"{self.wait}", f"{d}.{c}.{b}.{a}"]
-                            mapped += [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
-            print(mapped)
+                            try:
+                                mapped += [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
+                            except:
+                                pass
+            with open(logPath, "w") as file:
+                file.writelines(output+"\n" for output in mapped)
             # sleep(self.wait)
+
 
     def storeInfo(self, ip, name):
         try:
@@ -67,15 +84,26 @@ class IpRange:
             print(self.bssid)  #### debugg
         except:
             print("Impossible to locate BSSID, make sure you are connected to a network.")
+            exit(1)
 
+        try:
+            checkElement(crudGet(logPath), ip)
+        except:
+            print(f"impossible to locate {ip} in {logPath}")
+            exit(1)
+
+        # json model to be used on configPath
         dictionary = {
             "_id" : self.bssid,
             "user" : [
                 {"ip" : ip, "name" : name}
             ]
         }
-        result = [x for x in crudGet(logPath) if x in ip]
-        print(result)
+
+        crudPut(configPath, crudGetJson(configPath), self.bssid, ip, name)
+        print(crudGetJson(configPath))
+        print(crudGet(logPath))
+
 
 
 def main():
@@ -88,7 +116,6 @@ def main():
 
     if args.ipIdentifier != None:
         mapping.storeInfo(args.ipIdentifier[0], args.ipIdentifier[1])
-        # mapping.putIp()
     else:
         mapping.mapIp()
 
