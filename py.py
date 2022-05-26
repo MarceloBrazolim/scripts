@@ -27,13 +27,13 @@ def crudGet(file):
     return [x.split("\n")[0] for x in open(file, "r").readlines()]
 
 def crudGetJson(file):
-    return json.load(open(file))
+    return json.load(open(file, "r"))
 
-def crudPut(file, dictio, id, ip, name):
-    for each, _id in enumerate(id):
-        dictio[_id] = {"ip": ip, "name": name}
-    with open(file, "w") as jsonFile:
-        json.dump(file, jsonFile)
+def crudPut(file, data, id, ip, name):
+    data[id]['ip'] = ip
+    data[id]['name'] = name
+    with open(data, "w") as file:
+        json.dump(data, file)
 
 
 def checkElement(array, element):
