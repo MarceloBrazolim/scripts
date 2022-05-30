@@ -66,6 +66,13 @@ class IpRange:
                 for b in range(first[2], second[2]+1):
                     for a in range(first[3], second[3]+1):
                         command = ["ping", "-c", f"{self.count}", "-W", f"{self.wait}", f"{d}.{c}.{b}.{a}"]
+                        # ipv4 = [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
+                        # entry = json.loads(get(dataBase, bssid, ipv4))
+
+# entry = json.loads(get(dataBase, bssid, str(ipv4)))
+# TypeError: the JSON object must be str, bytes or bytearray, not list
+
+
                         try:
                             ipv4 = [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
                             try:
@@ -73,7 +80,6 @@ class IpRange:
                                 print(bssid)
                                 print(ipv4)
                                 print("get: {}".format(get(dataBase, bssid, ipv4)))
-                                # entry = json.loads(get(dataBase, bssid, ipv4))
                                 entry = json.loads(get(dataBase, bssid, str(ipv4)))
                             except:
                                 entry = ""
