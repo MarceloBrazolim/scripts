@@ -1,14 +1,15 @@
 from subprocess import check_output
-from time import sleep
-import argparse
+from pysondb import db
 import json
+# from time import sleeps
+import argparse
 
 
 # default values
 firstIp = "127.0.0.1"
 secondIp = "127.0.0.10"
 logPath = "testMap.log"
-configPath = "config.config"
+dataBase = db.getDb("mapDb.json")
 
 
 # Argument Handler
@@ -23,27 +24,24 @@ parser.add_argument("-s", '--self', action='store_true', help="Enable discovery 
 
 
 # CRUD .. yes, in python
-def crudGet(file):
-    return [x.split("\n")[0] for x in open(file, "r").readlines()]
+def getAll(DB):
+    return DB.getAll()
 
-def crudGetJson(file):
-    return json.load(open(file, "r"))
+def get(DB, bssid, ipv4):
+    return DB.getByQuery({"bssid":str(bssid), "ipv4":str(ipv4)})
 
-def crudPut(file, data, id, ip, name):
-    data[id]['ip'] = ip
-    data[id]['name'] = name
-    with open(data, "w") as file:
-        json.dump(data, file)
+def post(DB, bssid, ipv4, name=""):
+    return DB.add({"bssid":str(bssid), "ipv4":str(ipv4), "name":str(name)})
 
+def put(DB, bssid, ipv4, name):
+    DB.updateByQuery({"bssid":str(bssid), "ipv4":str(ipv4)}, {"name":str(name)})
 
-def checkElement(array, element):
-    # checks weather or not IP is present in logPath
-    # if exists return the element in the array equals to the parameter element
+def getBssid():
     try:
-        return [x for x in array if x == element][0]
+        return str(check_output(['iwgetid', '-ar'])).split("'")[1].split("\\")[0]
     except:
-        return exit(1)
-
+        print("Impossible to locate BSSID, make sure you are connected to a network")
+        exit(1)
 
 class IpRange:
     # constructor
@@ -53,57 +51,54 @@ class IpRange:
         self.count = count
         self.wait = wait
 
-
     def mapIp(self):
-        print(f"firstIp: {self.firstIp}\nsecondIp: {self.secondIp}")
+        bssid = getBssid()
+
+        print(f"---- Parameters:\n  firstIp: {self.firstIp}\n  secondIp: {self.secondIp}")
 
         # converts str '192.168.0.1' to int array [192, 168, 0, 1]
         first = [int(x) for x in self.firstIp.split(".")]
         second = [int(x) for x in self.secondIp.split(".")]
 
-        with open(logPath, "w") as file:
-            mapped = []
-            for d in range(first[0], second[0]+1):
-                for c in range(first[1], second[1]+1):
-                    for b in range(first[2], second[2]+1):
-                        for a in range(first[3], second[3]+1):
-                            command = ["ping", "-c", f"{self.count}", "-W", f"{self.wait}", f"{d}.{c}.{b}.{a}"]
+        mapped = []
+        for d in range(first[0], second[0]+1):
+            for c in range(first[1], second[1]+1):
+                for b in range(first[2], second[2]+1):
+                    for a in range(first[3], second[3]+1):
+                        command = ["ping", "-c", f"{self.count}", "-W", f"{self.wait}", f"{d}.{c}.{b}.{a}"]
+                        try:
+                            ipv4 = [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
                             try:
-                                mapped += [str(check_output(command)).split('bytes from')[1].split(':')[0].strip()]
+                                print(dataBase)
+                                print(bssid)
+                                print(ipv4)
+                                print("get: {}".format(get(dataBase, bssid, ipv4)))
+                                # entry = json.loads(get(dataBase, bssid, ipv4))
+                                entry = json.loads(get(dataBase, bssid, str(ipv4)))
                             except:
-                                pass
-            with open(logPath, "w") as file:
-                file.writelines(output+"\n" for output in mapped)
-            # sleep(self.wait)
+                                entry = ""
+                            print("entry:" + entry)
+                            mapped += [f"{ipv4}    {entry}"]
+                        except:
+                            pass
+        with open(logPath, "w") as file:
+            file.writelines(output+"\n" for output in mapped)
+            print("---- Mapped IP addresses:")
+            for x in mapped:
+                print(x)
+        # sleep(self.wait)
 
 
-    def storeInfo(self, ip, name):
-        try:
-            # get the active network's bssid
-            self.bssid = str(check_output(['iwgetid', '-ar'])).split("'")[1].split("\\")[0]
-            print(self.bssid)  #### debugg
-        except:
-            print("Impossible to locate BSSID, make sure you are connected to a network.")
-            exit(1)
+    def storeInfo(self, ipv4, name=""):
+        bssid = getBssid()
 
-        try:
-            checkElement(crudGet(logPath), ip)
-        except:
-            print(f"impossible to locate {ip} in {logPath}")
-            exit(1)
-
-        # json model to be used on configPath
-        dictionary = {
-            "_id" : self.bssid,
-            "user" : [
-                {"ip" : ip, "name" : name}
-            ]
-        }
-
-        crudPut(configPath, crudGetJson(configPath), self.bssid, ip, name)
-        print(crudGetJson(configPath))
-        print(crudGet(logPath))
-
+        if get(dataBase, bssid, ipv4) == []:
+            print(f"No registry for {bssid} : {ipv4}")
+            print(f"Entry created:\n  bssid: {bssid}, ipv4: {ipv4}, name: {name}")
+            post(dataBase, bssid, ipv4, name)
+        else:
+            put(dataBase, bssid, ipv4, name)
+            print(f"Registry updated:\n  bssid: {bssid}, ipv4: {ipv4}, name: {name}")
 
 
 def main():
