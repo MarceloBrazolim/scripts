@@ -13,7 +13,6 @@ USAGE="./$me [OPTIONS] [FILE-TO-BURN] [MEDIA-TO-BURN-TO]"
 
 bs="4M"
 status="progress"
-whoami=$(whoami)
 
 
 ##### Functions #####
@@ -69,10 +68,4 @@ fi
 
 ##### Body #####
 
-if [ $whoami != "root" ]; then
-  echo "  This script requires to be executed as root"
-  echo "  Use 'sudo' and try again."
-  exit 1
-fi
-
-(dd if="$if" of="$of" bs="$bs" status="$status") 2>&1
+(sudo dd if="$if" of="$of" bs="$bs" status="$status") 2>&1
